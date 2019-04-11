@@ -1,7 +1,7 @@
 {
     "name": "@cisl/cais-express",
     "description": "An opinionated express setup for cogs in the CAIS",
-    "version": "1.1.0",
+    "version": "1.2.0",
     "author": "Matthew Peveler <pevlem@rpi.edu>",
     "license": "MIT",
     "main": "index.js",
