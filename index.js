@@ -47,7 +47,7 @@ app.set('view engine', 'ejs');
 app.express_listen = app.listen;
 app.listen = () => {
   app.express_listen(app.get('port'), () => {
-    logger.log(`Express server listening on port ${config.port}`);
+    logger.info(`Express server listening on port ${config.port}`);
   });
 };
 
