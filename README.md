@@ -8,7 +8,7 @@ used from the `cog.json` file.
 
 ## Installation
 ```bash
-npm install @celio/express
+npm install @cisl/express
 ```
 ## Usage
 ```js
