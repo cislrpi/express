@@ -1,5 +1,10 @@
 # Changelog
 
+## v1.3.0
+* Rewrite module to use TypeScript
+* Added `app.cogListen` function which incorporates the old overriden `app.listen` functionality.
+* Remove `app.express` and `app.express_listen`. Simply import `express` or use `app.listen` instead.
+
 ## v1.2.1
 * Fix undefined reference to logger.log (should be logger.info) when using @cisl/logger
 
