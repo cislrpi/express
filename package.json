@@ -1,6 +1,6 @@
 {
     "name": "@cisl/express",
-    "description": "An opinionated express setup for cogs in the CAIS",
+    "description": "An opinionated express depending on cog.json",
     "version": "1.3.0",
     "author": "Matthew Peveler <pevlem@rpi.edu>",
     "license": "MIT",
