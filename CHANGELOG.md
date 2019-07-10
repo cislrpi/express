@@ -1,5 +1,11 @@
 # Changelog
 
+## v1.3.1
+* Add back in `app.expressListen`
+* Make `app.listen` to be equivalent to v1.2.1 `app.listen` functionality
+* Remove `app.cogListen` as it's equivalent to `app.listen`
+* Use `utf-8` instead of `ascii` when reading the cog.json file
+
 ## v1.3.0
 * Rewrite module to use TypeScript
 * Added `app.cogListen` function which incorporates the old overriden `app.listen` functionality.

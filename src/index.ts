@@ -4,13 +4,15 @@ import express from 'express';
 import {Express} from 'express';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
+import { Server as httpServer } from 'http';
 
 interface Config {
   port?: string | number;
 }
 
 interface CislExpress extends Express {
-  cogListen: () => void;
+  listen: () => httpServer;
+  expressListen: (port: number, callback: () => void) => httpServer;
 }
 
 interface Logger {
@@ -22,9 +24,13 @@ function isConsole(variable: Logger | Console): variable is Console {
   return 'countReset' in variable;
 }
 
-let logger: Console | Logger = console;
-if (require.resolve('@cisl/logger')) {
+let logger: Console | Logger;
+
+try {
   logger = require('@cisl/logger');
+}
+catch (e) {
+  logger = console;
 }
 
 if (isConsole(logger)) {
@@ -40,7 +46,7 @@ if (!fs.existsSync(config_file)) {
 }
 
 try {
-  config = JSON.parse(fs.readFileSync(config_file, {encoding: 'ascii'}));
+  config = JSON.parse(fs.readFileSync(config_file, {encoding: 'utf-8'}));
 }
 catch (e) {
   logger.error('Error: could not parse cog.json file');
@@ -66,8 +72,14 @@ express_app.set('view engine', 'ejs');
 let app: CislExpress = Object.assign(
   express_app,
   {
-    cogListen: (): void => {
-      express_app.listen(express_app.get('port'), (): void => {
+    expressListen: express_app.listen,
+  }
+);
+app = Object.assign(
+  app,
+  {
+    listen: (): httpServer => {
+      return app.expressListen(express_app.get('port'), (): void => {
         logger.info(`Express server listening on port ${config.port}`);
       });
     }
