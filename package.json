@@ -1,7 +1,7 @@
 {
     "name": "@cisl/express",
     "description": "An opinionated express depending on cog.json",
-    "version": "1.3.1",
+    "version": "1.3.2",
     "author": "Matthew Peveler <pevlem@rpi.edu>",
     "license": "MIT",
     "main": "dist/index.js",

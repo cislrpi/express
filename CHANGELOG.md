@@ -1,5 +1,8 @@
 # Changelog
 
+## v1.3.2
+* Add missing cookie-parser dependency
+
 ## v1.3.1
 * Add back in `app.expressListen`
 * Make `app.listen` to be equivalent to v1.2.1 `app.listen` functionality
