@@ -1,6 +1,6 @@
 # Changelog
 
-## v1.3.2
+## v1.3.3
 * Add missing cookie-parser dependency
 
 ## v1.3.1
