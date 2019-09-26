@@ -1,6 +1,7 @@
 # @cisl/express
 
-An opinionated wrapper around the popular [express](https://expressjs.com/) library. 
+An opinionated wrapper around the popular [express](https://expressjs.com/) library as
+well as [socket.io](https://socket.io/).
 
 The library assumes that you want to use `cookie-parser`, `body-parser` (namely JSON),
 `json spaces` set to 2, and use `ejs` as the view engine. Finally, the port is
@@ -12,9 +13,12 @@ npm install @cisl/express
 ```
 ## Usage
 ```js
-const app = require('@cisl/express');
+const express = require('@cisl/express');
 // or typescript
 import app from '@cisl/express';
+
+const app = express();
+app.listen();
 ```
 
 and then it can be used the same as a regular express object:
@@ -24,9 +28,18 @@ app.get('/', (req, res) => {
 });
 ```
 
-The only exception is that instead of using the `listen()` function, you should
-use the `cogListen()` function which wraps `listen`, using the `port` defined in
-the `cog.json` file.
+as well as accessing the attached socket.io instance:
+```js
+app.socketio.on('connection', (socket) => {
+    console.log('a user connected');
+});
+```
+
+If you want to disable the socket.io instance, pass in `{socketio: false}` to the `express`
+function.
+
+If you need the original listen method, it can be accessed through `app.expressListen`.
+Socket.io is expressed through `app.socketio`.
 
 Additionally, the package will automatically add a `/test` GET route that returns
 a JSON object with the following definition:
