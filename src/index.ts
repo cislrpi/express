@@ -1,25 +1,30 @@
 import fs from 'fs';
 import path from 'path';
 import express from 'express';
-import {Express} from 'express';
+import { Express } from 'express';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
-import { Server as httpServer, createServer } from 'http';
-import SocketIO from 'socket.io';
+import { Server as HttpServer, createServer } from 'http';
 import serveStatic from 'serve-static';
+import { Server as WebSocketServer } from 'ws';
 
 interface Config {
   port?: string | number;
 }
 
-interface CislExpress extends Express {
-  listen: () => httpServer;
-  expressListen: (port: number, callback: () => void) => httpServer;
-  socketio?: SocketIO.Server;
+interface Options {
+  quiet?: boolean;
 }
 
-interface Options {
-  socketio?: boolean;
+interface IntermediateExpress extends Express {
+  quiet: boolean;
+  expressListen: (port: number, callback: () => void) => HttpServer;
+  httpServer: HttpServer;
+}
+
+interface CislExpress extends IntermediateExpress {
+  listen: () => HttpServer;
+  wsServer: WebSocketServer;
 }
 
 interface Logger {
@@ -45,15 +50,15 @@ if (isConsole(logger)) {
 }
 
 
-let config_file = path.resolve('cog.json');
+const configFile = path.resolve('cog.json');
 let config: Config = {};
-if (!fs.existsSync(config_file)) {
+if (!fs.existsSync(configFile)) {
   logger.error('Could not find cog.json file');
   process.exit(-1);
 }
 
 try {
-  config = JSON.parse(fs.readFileSync(config_file, {encoding: 'utf-8'}));
+  config = JSON.parse(fs.readFileSync(configFile, {encoding: 'utf-8'}));
 }
 catch (e) {
   logger.error('Error: could not parse cog.json file');
@@ -66,8 +71,8 @@ if (!config.port) {
   process.exit(-1);
 }
 
-function createApplication(options?: Options): CislExpress {
-  let express_app = express();
+function createApplication(options: Options = {}): CislExpress {
+  const express_app = express();
   express_app.set('port', config.port);
   express_app.use(cookieParser());
   express_app.use(bodyParser.json());
@@ -75,28 +80,34 @@ function createApplication(options?: Options): CislExpress {
   express_app.set('json spaces', 2);
   express_app.set('view engine', 'ejs');
 
-  let final_app: CislExpress = Object.assign(
+  express_app.get('/test', (_, res) => {
+    res.json({response: 'AOK', error: null});
+  });
+
+  const intermediate: IntermediateExpress = Object.assign(
     express_app,
     {
+      quiet: options.quiet === true,
       expressListen: express_app.listen,
-      socketio: (options && options.socketio === true) ? SocketIO(createServer(express_app)) : undefined
+      httpServer: createServer(express_app)
     }
   );
 
-  final_app = Object.assign(
-    final_app,
+  return Object.assign(
+    intermediate,
     {
-      listen: (): httpServer => {
-        return final_app.expressListen(express_app.get('port'), (): void => {
-          logger.info(`Express server listening on port ${config.port}`);
+      intermediate: express_app.listen,
+      wsServer: new WebSocketServer({server: intermediate.httpServer})
+    },
+    {
+      listen: (): HttpServer => {
+        return intermediate.httpServer.listen(express_app.get('port'), (): void => {
+          logger.info(`@cisl/express listening on port ${config.port}`);
         });
       }
     }
   );
-
-  return final_app;
 }
-
 
 createApplication.application = express.application;
 createApplication.request = express.request;
