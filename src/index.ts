@@ -2,7 +2,6 @@ import fs from 'fs';
 import path from 'path';
 import express from 'express';
 import { Express } from 'express';
-import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import { Server as HttpServer, createServer } from 'http';
 import serveStatic from 'serve-static';
@@ -75,8 +74,8 @@ function createApplication(options: Options = {}): CislExpress {
   const express_app = express();
   express_app.set('port', config.port);
   express_app.use(cookieParser());
-  express_app.use(bodyParser.json());
-  express_app.use(bodyParser.urlencoded({extended: true}));
+  express_app.use(express.json());
+  express_app.use(express.urlencoded());
   express_app.set('json spaces', 2);
   express_app.set('view engine', 'ejs');
 
