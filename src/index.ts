@@ -75,7 +75,7 @@ function createApplication(options: Options = {}): CislExpress {
   express_app.set('port', config.port);
   express_app.use(cookieParser());
   express_app.use(express.json());
-  express_app.use(express.urlencoded());
+  express_app.use(express.urlencoded({extended: true}));
   express_app.set('json spaces', 2);
   express_app.set('view engine', 'ejs');
 
