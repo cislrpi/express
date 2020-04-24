@@ -37,9 +37,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://internal.cisl.rpi.edu/code/libraries/node/cisl/express"
+    "url": "https://github.com/cislrpi/express"
   },
   "publishConfig": {
-    "registry": "https://internal.cisl.rpi.edu/npm/"
+    "access": "public"
   }
 }
