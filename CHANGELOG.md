@@ -1,5 +1,10 @@
 # Changelog
 
+## v1.0.4
+
+* [Security] Update to latest `ejs` release
+* Pin to latest ^7 release of `ws`
+
 ## v1.0.3
 
 * Move to GitHub actions pipelines
